@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BatchController;
 use Illuminate\Support\Facades\Route;
+
 
 // Login (hanya untuk tamu)
 Route::middleware('guest')->group(function () {
@@ -15,8 +17,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Halaman berikut dibuat pada tahap selanjutnya.
-    // Route::get('/batch', [BatchController::class, 'index'])->name('batches.index');
+    // Halaman Batch
+    Route::get('/batch', [BatchController::class, 'index'])->name('batches.index');
+    Route::post('/batch', [BatchController::class, 'store'])->name('batches.store');
     // Route::get('/batch/{batch}', [BatchController::class, 'show'])->name('batches.show');
     // Route::get('/pengaturan', [SettingController::class, 'index'])->name('settings.index');
 });

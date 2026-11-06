@@ -32,6 +32,15 @@
             <path d="M4 6h16M4 12h16M4 18h16"/>
             @break
 
+        @case('trash')
+            <path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>
+            @break
+
+        @case('power')
+            <path d="M12 3v9"/>
+            <path d="M6.4 6.4a8 8 0 1 0 11.2 0"/>
+            @break
+
         @case('logout')
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
             @break

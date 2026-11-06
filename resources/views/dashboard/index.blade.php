@@ -15,13 +15,13 @@
         </h3>
 
         @if ($batches->isNotEmpty())
-            <ul>
+            <ul class="divide-y divide-gray-200 border-t border-gray-200">
                 @foreach ($batches as $batch)
                     <x-batch-row :batch="$batch" />
                 @endforeach
             </ul>
         @else
-            <p class="border-t border-eg-dark/20 px-6 py-10 text-center text-eg-dark/70 sm:px-11">
+            <p class="border-t border-gray-200 px-6 py-10 text-center text-eg-dark/80 sm:px-11">
                 Belum ada batch. Tambahkan batch pertama di menu Batch untuk mulai memantau pengeringan.
             </p>
         @endif

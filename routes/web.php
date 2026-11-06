@@ -23,3 +23,16 @@ Route::middleware('auth')->group(function () {
     // Route::get('/batch/{batch}', [BatchController::class, 'show'])->name('batches.show');
     // Route::get('/pengaturan', [SettingController::class, 'index'])->name('settings.index');
 });
+
+//Pengaturan
+use App\Http\Controllers\PengaturanController;
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/pengaturan', [PengaturanController::class, 'index'])
+        ->name('pengaturan.index');
+
+    Route::put('/pengaturan', [PengaturanController::class, 'update'])
+        ->name('pengaturan.update');
+
+});

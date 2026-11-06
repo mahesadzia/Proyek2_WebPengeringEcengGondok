@@ -59,6 +59,14 @@
                     </div>
                 </div>
 
+                <div class="mt-4 flex justify-end">
+                    <a href="{{ route('batches.show', $batch) }}"
+                       aria-label="Selengkapnya tentang {{ $batch->nama }}"
+                       class="inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline {{ $title }}">
+                        Selengkapnya <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+
             </article>
         @empty
             <p class="text-eg-dark/70">Belum ada batch.</p>
@@ -81,12 +89,15 @@
             @endif
         </div>
 
-        <label class="mt-4 flex items-center gap-2 text-sm text-eg-dark">
-            <input type="hidden" name="is_active" value="0">
-            <input type="checkbox" name="is_active" value="1" @checked(old('is_active'))
-                   class="rounded border-gray-300 text-eg-dark focus:ring-eg-dark">
-            Langsung aktifkan batch ini
-        </label>
+        <div class="mt-4">
+            <label for="waktu_mulai" class="block text-sm font-semibold text-eg-dark">Waktu Mulai Pengeringan</label>
+            <input id="waktu_mulai" name="waktu_mulai" type="datetime-local" value="{{ old('waktu_mulai') }}"
+                   class="mt-1.5 block w-full rounded-lg border-gray-300 shadow-sm focus:border-eg-dark focus:ring-eg-dark">
+            <p class="mt-1 text-xs text-gray-500">Dalam WIB. Kosongkan jika belum dimulai.</p>
+            @if ($errors->tambahBatch->has('waktu_mulai'))
+                <p class="mt-1.5 text-sm text-eg-rust" role="alert">{{ $errors->tambahBatch->first('waktu_mulai') }}</p>
+            @endif
+        </div>
 
         <div class="mt-6 flex justify-end gap-3">
             <button type="button" x-on:click="$dispatch('close')"

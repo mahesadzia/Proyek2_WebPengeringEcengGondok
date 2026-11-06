@@ -2,7 +2,7 @@
     $menus = [
         ['label' => 'Beranda',    'icon' => 'home',     'route' => 'dashboard',      'active' => 'dashboard'],
         ['label' => 'Batch',      'icon' => 'batch',    'route' => 'batches.index',  'active' => 'batches.*'],
-        ['label' => 'Pengaturan', 'icon' => 'settings', 'route' => 'settings.index', 'active' => 'settings.*'],
+        ['label' => 'Pengaturan', 'icon' => 'settings', 'route' => 'pengaturan.index', 'active' => 'pengaturan.*'],
     ];
 @endphp
 

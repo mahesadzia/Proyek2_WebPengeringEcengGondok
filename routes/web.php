@@ -21,6 +21,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/batch', [BatchController::class, 'index'])->name('batches.index');
     Route::post('/batch', [BatchController::class, 'store'])->name('batches.store');
     Route::get('/batch/{batch}', [BatchController::class, 'show'])->name('batches.show');
+    Route::patch('/Batch/{batch}/status', [BatchController::class, 'updateStatus'])->name('batches.status');
+    Route::delete('/batch/{batch}', [BatchController::class, 'destroy'])->name('batches.destroy');
     Route::patch('/batch/{batch}/status', [BatchController::class, 'toggleStatus'])->name('batches.status');
     Route::delete('/batch/{batch}', [BatchController::class, 'destroy'])->name('batches.destroy');
 

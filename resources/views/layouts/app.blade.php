@@ -21,10 +21,10 @@
 
     @include('partials.sidebar')
 
-    <div class="lg:pl-72">
+    <div class="lg:pl-60">
         @include('partials.topbar', ['pageTitle' => View::yieldContent('page-title', 'Beranda')])
 
-        <main id="konten" class="px-5 pb-12 pt-6 sm:px-8">
+        <main id="konten" class="px-5 pb-12 pt-8 sm:px-10">
             @include('partials.flash-message')
 
             @yield('content')

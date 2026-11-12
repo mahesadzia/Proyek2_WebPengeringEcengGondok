@@ -1,5 +1,4 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
-import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -15,7 +14,7 @@ export default {
             colors: {
                 eg: {
                     dark:  '#2B6A24',
-                    deep:  '#1B3F15',
+                    deep:  '#27501F',
                     leaf:  '#5BBB3D',
                     mint:  '#9FDB8E',
                     lime:  '#D3F9A5',
@@ -24,8 +23,24 @@ export default {
                     clay:  '#A44A33',
                     rust:  '#A33D26',
                 },
+                ec: {
+                    forest:    '#2D4A38',
+                    mist:      '#E8EFE6',
+                    cream:     '#F5F1E8',
+                    ink:       '#2A3B30',
+                    leaf:      '#5A8F60',
+                    moss:      '#3F6B45',
+                    sage:      '#DDE9DA',
+                    sand:      '#ECE8DC',
+                    line:      '#E6E1D6',
+                    rose:      '#F5E1DC',
+                    rosetext:  '#A34F43',
+                    amber:     '#F8EFD7',
+                    amberline: '#EAD9A8',
+                    amberink:  '#5C4410',
+                },
             },
         },
     },
-    plugins: [forms],
+    plugins: [],
 };

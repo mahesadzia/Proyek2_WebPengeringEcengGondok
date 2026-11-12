@@ -13,7 +13,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
     <style>[x-cloak]{display:none!important} body{font-family:'Poppins',ui-sans-serif,system-ui,sans-serif}</style>
 </head>
-<body class="bg-white text-green-900 antialiased">
+<body class="bg-ec-cream font-sans text-ec-ink antialiased">
 <div x-data="{ sidebar: false }" class="min-h-screen md:flex">
 
     {{-- Overlay mobile --}}

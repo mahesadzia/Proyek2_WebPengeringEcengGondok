@@ -7,21 +7,18 @@
 @endphp
 
 <aside id="sidebar"
-       class="fixed inset-y-0 left-0 z-40 w-72 -translate-x-full bg-gradient-to-b from-[#2F7D26] via-[#256B1F] to-eg-deep text-white shadow-xl transition-transform duration-200 lg:translate-x-0 lg:shadow-none">
+       class="fixed inset-y-0 left-0 z-40 w-60 -translate-x-full bg-ec-forest text-white transition-transform duration-200 lg:translate-x-0">
 
     {{-- Logo --}}
-    <div class="flex h-[110px] items-center justify-center border-b-[3px] border-white/90 px-4">
+    <div class="flex h-[88px] items-center border-b border-white/10 px-7">
         <a href="{{ route('dashboard') }}" aria-label="Eceng Gondok — ke Beranda"
-           class="rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#2F7D26]">
-            {{-- Ganti dengan <img src="{{ asset('images/logo-eceng-gondok.svg') }}"> bila aset logo tersedia --}}
-            <span class="block -skew-x-6 text-[26px] font-bold italic leading-none tracking-tight drop-shadow-[0_2px_0_rgba(0,0,0,.25)]">
-                ECENG GONDOK
-            </span>
+           class="text-lg font-bold tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+            ECENG GONDOK
         </a>
     </div>
 
     {{-- Navigasi --}}
-    <nav class="mt-7 space-y-1.5 px-3" aria-label="Menu utama">
+    <nav class="mt-5 space-y-1.5 px-3.5" aria-label="Menu utama">
         @foreach ($menus as $menu)
             @php
                 $isActive = request()->routeIs($menu['active']);
@@ -29,9 +26,9 @@
             @endphp
             <a href="{{ $href }}"
                @if ($isActive) aria-current="page" @endif
-               class="flex items-center gap-3 rounded-lg px-4 py-3 text-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white
-                      {{ $isActive ? 'bg-white font-semibold text-eg-dark shadow-sm' : 'font-medium text-white hover:bg-white/15' }}">
-                <x-icon :name="$menu['icon']" class="h-6 w-6 shrink-0" />
+               class="flex items-center gap-3 rounded-xl px-3.5 py-3 text-[15px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white
+                      {{ $isActive ? 'bg-ec-mist font-medium text-ec-forest' : 'text-white/90 hover:bg-white/10' }}">
+                <x-icon :name="$menu['icon']" class="h-5 w-5 shrink-0" />
                 <span>{{ $menu['label'] }}</span>
             </a>
         @endforeach

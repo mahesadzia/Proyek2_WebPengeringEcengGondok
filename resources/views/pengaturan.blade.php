@@ -50,11 +50,15 @@
         <form method="POST" action="{{ route('pengaturan.update') }}"
               x-data="{
                   awal: @js($user->name),
+                  awalEmail: @js($user->email),
                   nama: @js(old('name', $user->name)),
+                  email: @js(old('email', $user->email)),
+                  pwSekarang: '',
                   pw: '',
                   lihat: false,
-                  get berubah() { return this.nama.trim() !== this.awal || this.pw.length > 0 },
-                  reset() { this.nama = this.awal; this.pw = ''; this.lihat = false },
+                  get emailBerubah() { return this.email.trim().toLowerCase() !== this.awalEmail.toLowerCase() },
+                  get berubah() { return this.nama.trim() !== this.awal || this.emailBerubah || this.pw.length > 0 },
+                  reset() { this.nama = this.awal; this.email = this.awalEmail; this.pwSekarang = ''; this.pw = ''; this.lihat = false },
               }"
               class="overflow-hidden rounded-2xl border border-ec-line bg-white shadow-sm">
             @csrf
@@ -78,18 +82,31 @@
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-ec-ink">Email</label>
-                        <div class="relative">
-                            <input id="email" type="email" value="{{ $user->email }}" readonly aria-describedby="email-bantuan"
-                                   class="mt-1.5 block w-full cursor-not-allowed rounded-lg border border-ec-line bg-ec-cream px-3.5 py-2.5 pr-10 text-ec-ink/70 focus:outline-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-                                 class="absolute right-3 top-1/2 mt-0.5 h-4 w-4 -translate-y-1/2 text-ec-ink/50" aria-hidden="true">
-                                <rect x="4" y="11" width="16" height="10" rx="2"/>
-                                <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
-                            </svg>
+                        <label for="email" class="block text-sm font-medium text-ec-ink">Email untuk masuk</label>
+                        <input id="email" name="email" type="email" x-model="email" required maxlength="255"
+                               autocomplete="email" aria-describedby="email-bantuan"
+                               @error('email') aria-invalid="true" @enderror
+                               class="{{ $input }} @error('email') border-ec-rosetext @else border-ec-line @enderror">
+                        @error('email')
+                            <p class="mt-1.5 text-sm text-ec-rosetext" role="alert">{{ $message }}</p>
+                        @enderror
+                        <p id="email-bantuan" class="mt-1.5 text-xs text-ec-ink/60">Email ini dipakai untuk masuk ke sistem.</p>
+                    </div>
+
+                    {{-- Muncul hanya saat email diubah --}}
+                    <div class="sm:col-span-2" x-show="emailBerubah" style="display: none">
+                        <div class="rounded-xl border border-ec-amberline bg-ec-amber p-4 sm:max-w-md">
+                            <label for="password_sekarang" class="block text-sm font-medium text-ec-amberink">Password saat ini</label>
+                            <input id="password_sekarang" name="password_sekarang" type="password" x-model="pwSekarang"
+                                   x-bind:required="emailBerubah" autocomplete="current-password"
+                                   placeholder="Konfirmasi dengan password Anda"
+                                   @error('password_sekarang') aria-invalid="true" @enderror
+                                   class="{{ $input }} @error('password_sekarang') border-ec-rosetext @else border-ec-line @enderror">
+                            @error('password_sekarang')
+                                <p class="mt-1.5 text-sm text-ec-rosetext" role="alert">{{ $message }}</p>
+                            @enderror
+                            <p class="mt-1.5 text-xs text-ec-amberink/80">Diperlukan untuk keamanan saat mengganti email login.</p>
                         </div>
-                        <p id="email-bantuan" class="mt-1.5 text-xs text-ec-ink/60">Dipakai untuk masuk dan tidak dapat diubah di sini.</p>
                     </div>
                 </div>
             </div>

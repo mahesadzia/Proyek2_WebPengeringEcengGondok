@@ -204,7 +204,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin@example.com', NULL, '$2y$12$48rDxV65T9SbWjzOpfBwnONEfuQgRAtlgy3/5PyYkcLsrFj.gp6d.', NULL, '2026-11-05 06:53:15', '2026-11-05 06:53:15');
+(1, 'Admin', 'alimmaulana@gmail.com', NULL, '$2y$12$48rDxV65T9SbWjzOpfBwnONEfuQgRAtlgy3/5PyYkcLsrFj.gp6d.', NULL, '2026-11-05 06:53:15', '2026-11-05 06:53:15');
 
 --
 -- Indexes for dumped tables

@@ -126,7 +126,7 @@
                     <label for="nama" class="block text-sm font-medium text-ec-ink">Nama Batch</label>
                     <input id="nama" name="nama" type="text" value="{{ old('nama') }}" maxlength="50"
                            placeholder="Contoh: BCH5" autocomplete="off" required
-                           class="mt-1.5 block w-full rounded-lg border-ec-line uppercase shadow-sm focus:border-ec-moss focus:ring-ec-moss">
+                           class="mt-1.5 block w-full rounded-lg border border-ec-line px-3.5 py-2.5 uppercase shadow-sm focus:border-ec-moss focus:ring-ec-moss">
                     @if ($errors->tambahBatch->has('nama'))
                         <p class="mt-1.5 text-sm text-ec-rosetext" role="alert">{{ $errors->tambahBatch->first('nama') }}</p>
                     @endif
@@ -135,7 +135,7 @@
                 <div class="mt-4">
                     <label for="waktu_mulai" class="block text-sm font-medium text-ec-ink">Waktu Mulai Pengeringan</label>
                     <input id="waktu_mulai" name="waktu_mulai" type="datetime-local" value="{{ old('waktu_mulai') }}"
-                           class="mt-1.5 block w-full rounded-lg border-ec-line shadow-sm focus:border-ec-moss focus:ring-ec-moss">
+                           class="mt-1.5 block w-full rounded-lg border border-ec-line px-3.5 py-2.5 shadow-sm focus:border-ec-moss focus:ring-ec-moss">
                     <p class="mt-1 text-xs text-ec-ink/60">Dalam WIB. Kosongkan jika belum dimulai.</p>
                     @if ($errors->tambahBatch->has('waktu_mulai'))
                         <p class="mt-1.5 text-sm text-ec-rosetext" role="alert">{{ $errors->tambahBatch->first('waktu_mulai') }}</p>
@@ -145,7 +145,7 @@
                 <label class="mt-4 flex items-center gap-2 text-sm text-ec-ink">
                     <input type="hidden" name="is_active" value="0">
                     <input type="checkbox" name="is_active" value="1" @checked(old('is_active'))
-                           class="rounded border-ec-line text-ec-moss focus:ring-ec-moss">
+                           class="h-4 w-4 rounded border-ec-line accent-ec-moss">
                     Langsung aktifkan batch ini
                 </label>
 

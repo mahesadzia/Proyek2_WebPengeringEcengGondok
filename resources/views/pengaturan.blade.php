@@ -4,78 +4,148 @@
 @section('page-title', 'Pengaturan')
 
 @section('content')
-    @php($user = auth()->user())
+    @php
+        $user = auth()->user();
+        $inisial = strtoupper(mb_substr(trim($user->name ?? ''), 0, 1)) ?: 'A';
+        $bergabung = $user->created_at?->copy()->timezone('Asia/Jakarta')->locale('id')->translatedFormat('j F Y');
+        $diperbarui = $user->updated_at?->copy()->locale('id')->diffForHumans();
 
-    <section class="rounded-2xl border-2 border-eg-dark bg-white p-6 shadow-sm sm:p-9"
-             x-data="{ edit: {{ $errors->any() ? 'true' : 'false' }}, lihat: false }">
+        $input = 'mt-1.5 block w-full rounded-lg border bg-white px-3.5 py-2.5 text-ec-ink shadow-sm placeholder:text-ec-ink/40 focus:border-ec-moss focus:outline-none focus:ring-2 focus:ring-ec-moss/30';
+    @endphp
 
-        <div class="flex items-start justify-between gap-4">
-            <div>
-                <h2 class="text-2xl font-bold text-eg-dark">Profil Pengguna</h2>
-                <p class="mt-1 text-sm text-gray-600">Informasi akun yang terdaftar pada sistem.</p>
+    <div class="grid items-start gap-5 lg:grid-cols-[19rem_minmax(0,1fr)]">
+
+        {{-- Ringkasan akun --}}
+        <aside class="space-y-4">
+            <section class="rounded-2xl border border-ec-line bg-white p-6 text-center shadow-sm" aria-label="Ringkasan akun">
+                <div class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-ec-forest text-4xl font-semibold text-white"
+                     aria-hidden="true">{{ $inisial }}</div>
+
+                <h2 class="mt-4 break-words text-xl font-semibold text-ec-ink">{{ $user->name }}</h2>
+                <p class="mt-0.5 break-all text-sm text-ec-ink/70">{{ $user->email }}</p>
+
+                <dl class="mt-5 space-y-2.5 border-t border-ec-line pt-4 text-left text-sm">
+                    <div class="flex justify-between gap-3">
+                        <dt class="text-ec-ink/70">Bergabung</dt>
+                        <dd class="font-medium text-ec-ink">{{ $bergabung ?? '-' }}</dd>
+                    </div>
+                    <div class="flex justify-between gap-3">
+                        <dt class="text-ec-ink/70">Diperbarui</dt>
+                        <dd class="font-medium text-ec-ink">{{ $diperbarui ?? '-' }}</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                        class="flex w-full items-center justify-center gap-2 rounded-xl border border-ec-line bg-white px-4 py-3 text-sm font-medium text-ec-rosetext shadow-sm hover:bg-ec-rose/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-ec-rosetext">
+                    <x-icon name="logout" class="h-5 w-5" />
+                    Keluar dari akun
+                </button>
+            </form>
+        </aside>
+
+        {{-- Formulir --}}
+        <form method="POST" action="{{ route('pengaturan.update') }}"
+              x-data="{
+                  awal: @js($user->name),
+                  nama: @js(old('name', $user->name)),
+                  pw: '',
+                  lihat: false,
+                  get berubah() { return this.nama.trim() !== this.awal || this.pw.length > 0 },
+                  reset() { this.nama = this.awal; this.pw = ''; this.lihat = false },
+              }"
+              class="overflow-hidden rounded-2xl border border-ec-line bg-white shadow-sm">
+            @csrf
+            @method('PUT')
+
+            {{-- Profil --}}
+            <div class="p-6 sm:p-8">
+                <h2 class="text-xl font-semibold text-ec-ink">Profil</h2>
+                <p class="mt-1 text-sm text-ec-ink/70">Informasi akun yang terdaftar pada sistem.</p>
+
+                <div class="mt-6 grid gap-5 sm:grid-cols-2">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-ec-ink">Nama pengguna</label>
+                        <input id="name" name="name" type="text" x-model="nama" required maxlength="255"
+                               autocomplete="name"
+                               @error('name') aria-invalid="true" aria-describedby="name-error" @enderror
+                               class="{{ $input }} @error('name') border-ec-rosetext @else border-ec-line @enderror">
+                        @error('name')
+                            <p id="name-error" class="mt-1.5 text-sm text-ec-rosetext" role="alert">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-ec-ink">Email</label>
+                        <div class="relative">
+                            <input id="email" type="email" value="{{ $user->email }}" readonly aria-describedby="email-bantuan"
+                                   class="mt-1.5 block w-full cursor-not-allowed rounded-lg border border-ec-line bg-ec-cream px-3.5 py-2.5 pr-10 text-ec-ink/70 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                                 class="absolute right-3 top-1/2 mt-0.5 h-4 w-4 -translate-y-1/2 text-ec-ink/50" aria-hidden="true">
+                                <rect x="4" y="11" width="16" height="10" rx="2"/>
+                                <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+                            </svg>
+                        </div>
+                        <p id="email-bantuan" class="mt-1.5 text-xs text-ec-ink/60">Dipakai untuk masuk dan tidak dapat diubah di sini.</p>
+                    </div>
+                </div>
             </div>
 
-            <button type="button" x-show="!edit" x-on:click="edit = true; $nextTick(() => $refs.nama.focus())"
-                    class="rounded-lg bg-eg-dark px-5 py-2.5 font-medium text-white hover:bg-eg-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-eg-dark focus-visible:ring-offset-2">
-                Ubah
-            </button>
-        </div>
+            {{-- Keamanan --}}
+            <div class="border-t border-ec-line p-6 sm:p-8">
+                <h2 class="text-xl font-semibold text-ec-ink">Keamanan</h2>
+                <p class="mt-1 text-sm text-ec-ink/70">Ganti password akun Anda. Kosongkan jika tidak ingin mengubahnya.</p>
 
-        <div class="mt-8 flex flex-col items-center gap-8 sm:flex-row sm:items-start sm:gap-12">
-
-
-            <form method="POST" action="{{ route('pengaturan.update') }}" class="w-full min-w-0 flex-1">
-                @csrf
-                @method('PUT')
-
-                <div>
-                    <label for="email" class="block font-medium text-gray-800">Email</label>
-                    <input id="email" type="email" value="{{ $user->email }}" readonly
-                           class="mt-1 block w-full border-0 border-b border-gray-400 bg-transparent px-1 py-2 text-lg font-semibold italic text-gray-700 focus:ring-0">
-                </div>
-
-                <div class="mt-5">
-                    <label for="name" class="block font-medium text-gray-800">Nama Pengguna</label>
-                    <input id="name" name="name" type="text" x-ref="nama" required
-                           value="{{ old('name', $user->name) }}"
-                           x-bind:readonly="!edit" x-bind:class="edit ? '' : 'italic'"
-                           class="mt-1 block w-full border-0 border-b border-gray-400 bg-transparent px-1 py-2 text-lg font-semibold text-eg-dark focus:border-eg-moss focus:ring-0">
-                </div>
-
-                <div class="mt-5">
-                    <label for="password" class="block font-medium text-gray-800">Password Baru</label>
+                <div class="mt-6 max-w-md">
+                    <label for="password" class="block text-sm font-medium text-ec-ink">Password baru</label>
                     <div class="relative">
-                        <input id="password" name="password" autocomplete="new-password"
-                               x-bind:type="lihat ? 'text' : 'password'"
-                               x-bind:readonly="!edit"
-                               x-bind:placeholder="edit ? 'Masukkan password baru' : 'Kosongkan jika tidak diubah'"
-                               placeholder="Kosongkan jika tidak diubah"
-                               class="mt-1 block w-full border-0 border-b border-gray-500 bg-transparent px-1 py-2 pr-24 text-lg font-semibold text-eg-dark focus:border-eg-moss focus:ring-0">
-                        <button type="button" x-show="edit" style="display: none" x-on:click="lihat = !lihat"
-                                class="absolute right-1 top-1/2 -translate-y-1/2 text-sm font-medium text-eg-dark hover:underline"
+                        <input id="password" name="password" x-model="pw" x-bind:type="lihat ? 'text' : 'password'"
+                               autocomplete="new-password" placeholder="Masukkan password baru"
+                               aria-describedby="password-bantuan"
+                               @error('password') aria-invalid="true" @enderror
+                               class="{{ $input }} pr-24 @error('password') border-ec-rosetext @else border-ec-line @enderror">
+                        <button type="button" x-on:click="lihat = !lihat" x-bind:aria-pressed="lihat"
+                                class="absolute right-3 top-1/2 mt-0.5 -translate-y-1/2 rounded text-sm font-medium text-ec-moss hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-ec-moss"
                                 x-text="lihat ? 'Sembunyikan' : 'Lihat'">Lihat</button>
                     </div>
-                    <p x-show="edit" style="display: none" class="mt-1 text-sm text-gray-600">
-                        Minimal 8 karakter. Kosongkan jika password tidak ingin diganti.
+
+                    @error('password')
+                        <p class="mt-1.5 text-sm text-ec-rosetext" role="alert">{{ $message }}</p>
+                    @enderror
+
+                    <p id="password-bantuan" class="mt-2 flex items-center gap-2 text-xs transition-colors"
+                       x-bind:class="pw.length >= 8 ? 'text-ec-moss' : 'text-ec-ink/60'">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 shrink-0" aria-hidden="true">
+                            <circle cx="12" cy="12" r="9" x-show="pw.length < 8"/>
+                            <path d="m5 12.5 4.5 4.5L19 7.5" x-show="pw.length >= 8" style="display: none"/>
+                        </svg>
+                        Minimal 8 karakter
                     </p>
                 </div>
+            </div>
 
-                <div x-show="edit" style="display: none" class="mt-7 flex justify-end gap-3">
-                    <a href="{{ route('pengaturan.index') }}"
-                       class="rounded-lg border border-gray-400 px-5 py-2.5 font-medium text-gray-800 hover:bg-gray-100">
+            {{-- Aksi --}}
+            <div class="flex flex-wrap items-center justify-between gap-3 border-t border-ec-line bg-ec-cream/50 px-6 py-4 sm:px-8">
+                <p class="text-sm text-ec-ink/70" role="status" x-show="berubah" style="display: none">
+                    Ada perubahan yang belum disimpan.
+                </p>
+                <span x-show="!berubah" class="text-sm text-ec-ink/50">Belum ada perubahan.</span>
+
+                <div class="ml-auto flex gap-3">
+                    <button type="button" x-on:click="reset()" x-bind:disabled="!berubah"
+                            class="rounded-lg border border-ec-line bg-white px-4 py-2 text-sm font-medium text-ec-ink hover:bg-ec-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-ec-forest disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white">
                         Batal
-                    </a>
-                    <button type="submit"
-                            class="rounded-lg bg-eg-dark px-5 py-2.5 font-medium text-white hover:bg-eg-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-eg-dark focus-visible:ring-offset-2">
-                        Simpan Perubahan
+                    </button>
+                    <button type="submit" x-bind:disabled="!berubah"
+                            class="rounded-lg bg-ec-moss px-5 py-2 text-sm font-medium text-white hover:bg-ec-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-ec-forest focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-ec-moss">
+                        Simpan perubahan
                     </button>
                 </div>
-            </form>
-        </div>
-
-        <p class="mt-8 rounded-lg border border-green-700/20 bg-green-50 px-4 py-3 text-green-900">
-            <strong>Informasi:</strong> untuk mengubah data akun, klik tombol <b>Ubah</b>.
-            Pastikan data yang dimasukkan sudah benar sebelum disimpan.
-        </p>
-    </section>
+            </div>
+        </form>
+    </div>
 @endsection

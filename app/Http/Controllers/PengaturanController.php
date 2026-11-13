@@ -15,8 +15,12 @@ class PengaturanController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name'     => 'required|string|max:255',
             'password' => 'nullable|string|min:8',
+        ], [
+            'name.required' => 'Nama pengguna wajib diisi.',
+            'name.max'      => 'Nama pengguna maksimal 255 karakter.',
+            'password.min'  => 'Password baru minimal 8 karakter.',
         ]);
 
         $user = auth()->user();

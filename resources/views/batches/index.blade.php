@@ -102,7 +102,8 @@
                             <a href="{{ route('batches.show', $batch) }}"
                                aria-label="Selengkapnya tentang {{ $batch->nama }}"
                                class="ml-auto text-sm font-medium text-ec-moss hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-ec-forest">
-                                Selengkapnya →
+                                Selengkapnya
+                                <i data-lucide="arrow-right" class="h-4 w-4"></i>
                             </a>
                         </div>
                     </article>

@@ -50,6 +50,71 @@
         </div>
     </dl>
 
+    {{-- Monitoring sensor ESP32 --}}
+    <section class="mt-5 rounded-2xl border border-ec-line bg-white p-6 shadow-sm" aria-labelledby="judul-sensor">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+                <h3 id="judul-sensor" class="text-xl font-semibold text-ec-ink">Monitoring sensor</h3>
+                <p class="mt-0.5 text-sm text-ec-ink/70">
+                    Perangkat: <span class="font-medium text-ec-ink">{{ $latestSensor->kode_perangkat ?? 'Belum ada data' }}</span>
+                    @if ($latestSensor)
+                        · Update terakhir {{ $latestSensor->created_at->diffForHumans() }}
+                    @endif
+                </p>
+            </div>
+        </div>
+
+        @if ($latestSensor)
+            <dl class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <div class="rounded-xl border border-ec-line bg-ec-cream/50 p-4">
+                    <dt class="text-xs text-ec-ink/70">Suhu</dt>
+                    <dd class="mt-1 text-2xl font-bold text-ec-ink">{{ number_format($latestSensor->suhu, 1) }} °C</dd>
+                </div>
+                <div class="rounded-xl border border-ec-line bg-ec-cream/50 p-4">
+                    <dt class="text-xs text-ec-ink/70">Kelembaban</dt>
+                    <dd class="mt-1 text-2xl font-bold text-ec-ink">{{ number_format($latestSensor->kelembaban, 1) }} %</dd>
+                </div>
+                <div class="rounded-xl border border-ec-line bg-ec-cream/50 p-4">
+                    <dt class="text-xs text-ec-ink/70">Heater</dt>
+                    <dd class="mt-1 text-lg font-semibold text-ec-ink">{{ $latestSensor->heater ? 'ON' : 'OFF' }}</dd>
+                </div>
+                <div class="rounded-xl border border-ec-line bg-ec-cream/50 p-4">
+                    <dt class="text-xs text-ec-ink/70">Kipas</dt>
+                    <dd class="mt-1 text-lg font-semibold text-ec-ink">{{ $latestSensor->kipas ? 'ON' : 'OFF' }}</dd>
+                </div>
+            </dl>
+
+            @if (isset($recentSensors) && $recentSensors->isNotEmpty())
+                <div class="mt-5 overflow-x-auto border-t border-ec-line pt-4">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="border-b border-ec-line text-ec-ink/70">
+                                <th class="pb-2 font-medium">Waktu</th>
+                                <th class="pb-2 font-medium">Perangkat</th>
+                                <th class="pb-2 font-medium">Suhu (°C)</th>
+                                <th class="pb-2 font-medium">Kelembaban (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-ec-line">
+                            @foreach ($recentSensors as $row)
+                                <tr>
+                                    <td class="py-2.5 text-ec-ink/80">{{ $row->created_at->format('H:i:s') }}</td>
+                                    <td class="py-2.5 font-medium text-ec-ink">{{ $row->kode_perangkat }}</td>
+                                    <td class="py-2.5 text-ec-ink">{{ number_format($row->suhu, 1) }}</td>
+                                    <td class="py-2.5 text-ec-ink">{{ number_format($row->kelembaban, 1) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        @else
+            <p class="mt-4 rounded-xl bg-ec-cream px-4 py-6 text-center text-sm text-ec-ink/70">
+                Belum ada data sensor masuk dari ESP32.
+            </p>
+        @endif
+    </section>
+
     <div class="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.85fr)_minmax(0,1fr)]">
 
         {{-- Status batch --}}

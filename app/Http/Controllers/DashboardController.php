@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Batch;
+use App\Models\SensorReading;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -26,6 +27,16 @@ class DashboardController extends Controller
             ->sortByDesc('progres')
             ->values();
 
-        return view('dashboard.index', compact('batches', 'ringkasan', 'perhatian'));
+        // Pembacaan sensor terbaru & riwayat terakhir dari ESP32
+        $latestSensor  = SensorReading::latest()->first();
+        $recentSensors = SensorReading::latest()->take(10)->get();
+
+        return view('dashboard.index', compact(
+            'batches',
+            'ringkasan',
+            'perhatian',
+            'latestSensor',
+            'recentSensors'
+        ));
     }
 }

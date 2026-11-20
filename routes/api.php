@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Batch;
 use App\Models\SensorReading;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,16 +19,21 @@ Route::post('/sensor', function (Request $request) {
         'kipas' => 'nullable|boolean',
     ]);
 
+    // Arahkan langsung ke batch 1
+    $batchId = Batch::where('id', 1)->value('id') ?? 1;
+
     $reading = SensorReading::create([
+        'batch_id'       => $batchId,
         'kode_perangkat' => $validated['kode_perangkat'],
-        'suhu' => $validated['suhu'],
-        'kelembaban' => $validated['kelembaban'],
-        'heater' => $validated['heater'] ?? false,
-        'kipas' => $validated['kipas'] ?? false,
+        'suhu'           => $validated['suhu'],
+        'kelembaban'     => $validated['kelembaban'],
+        'heater'         => $validated['heater'] ?? false,
+        'kipas'          => $validated['kipas'] ?? false,
     ]);
 
     return response()->json([
         'status' => 'ok',
+        'batch_id' => $batchId,
         'data' => $reading,
     ], 201);
 });

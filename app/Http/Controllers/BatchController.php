@@ -18,7 +18,14 @@ class BatchController extends Controller
 
     public function show(Batch $batch)
     {
-        return view('batches.show', compact('batch'));
+        $readings = $batch->sensorReadings()
+            ->latest()
+            ->take(20)
+            ->get();
+
+        $latestReading = $readings->first();
+
+        return view('batches.show', compact('batch', 'latestReading', 'readings'));
     }
 
     public function store(Request $request)

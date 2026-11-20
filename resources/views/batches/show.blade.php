@@ -33,12 +33,19 @@
             'Status'                  => $batch->status_label,
         ];
 
-        $sensor = [
-            ['Suhu', '- °C'],
-            ['Kelembaban', '- %'],
-            ['Heater', '-'],
-            ['Kipas Exhaust', '-'],
-        ];
+        $sensor = $latestReading
+            ? [
+                ['Suhu', number_format($latestReading->suhu, 1, ',', '.') . ' °C'],
+                ['Kelembaban', number_format($latestReading->kelembaban, 1, ',', '.') . ' %'],
+                ['Heater', $latestReading->heater ? 'Aktif' : 'Mati'],
+                ['Kipas Exhaust', $latestReading->kipas ? 'Aktif' : 'Mati'],
+            ]
+            : [
+                ['Suhu', '- °C'],
+                ['Kelembaban', '- %'],
+                ['Heater', '-'],
+                ['Kipas Exhaust', '-'],
+            ];
     @endphp
 
     <a href="{{ route('batches.index') }}"
@@ -84,7 +91,9 @@
     {{-- Kondisi alat: terisi setelah ESP32 terhubung --}}
     <section class="mt-6 rounded-2xl border border-gray-300 bg-white p-6 sm:p-8" aria-labelledby="judul-sensor">
         <h3 id="judul-sensor" class="text-xl font-bold text-eg-dark">Kondisi Alat</h3>
-        <p class="mt-1 text-sm text-gray-600">Menunggu data sensor dari alat. Nilai akan tampil otomatis setelah alat terhubung.</p>
+        <p class="mt-1 text-sm text-gray-600">
+            {{ $latestReading ? 'Data sensor terbaru dari alat.' : 'Menunggu data sensor dari alat. Nilai akan tampil otomatis setelah alat terhubung.' }}
+        </p>
 
         <dl class="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
             @foreach ($sensor as [$label, $nilai])
@@ -111,9 +120,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td colspan="4" class="py-8 text-center text-gray-600">Belum ada data pembacaan untuk batch ini.</td>
-                    </tr>
+                    @forelse ($readings ?? collect() as $reading)
+                        <tr class="border-b border-gray-200">
+                            <td class="py-2.5 pr-4">
+                                {{ $reading->created_at->timezone('Asia/Jakarta')->format('d/m/Y H:i:s') }} WIB
+                            </td>
+                            <td class="py-2.5 pr-4">
+                                {{ number_format($reading->suhu, 1, ',', '.') }} °C
+                            </td>
+                            <td class="py-2.5 pr-4">
+                                {{ number_format($reading->kelembaban, 1, ',', '.') }} %
+                            </td>
+                            <td class="py-2.5">
+                                -
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-8 text-center text-gray-600">
+                                Belum ada data pembacaan untuk batch ini.
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

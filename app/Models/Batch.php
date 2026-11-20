@@ -85,6 +85,11 @@ class Batch extends Model
 
         return $this->formatKg($susut) . ' (' . number_format($persen, 1, ',', '') . '%)';
     }
+    
+    public function sensorReadings()
+{
+    return $this->hasMany(SensorReading::class);
+}
 
     private function formatKg(?float $nilai): string
     {
